@@ -1,20 +1,20 @@
 @startuml
-[trajectory_generator]
+[force_generator]
 [motor_controller]
 [true_force_sensor]
 [FSR_raw]
 [calibration]
-[writing_machine]
+[bag_recorder]
 
-[trajectory_generator] --> [motor_controller] : "/motor_command"
-[trajectory_generator] --> [writing_machine] : "/motor_command"
-[motor_controller] --> [writing_machine] : "/motor_position"
-[true_force_sensor] --> [writing_machine] : "/true_force_data"
-[FSR_raw] --> [writing_machine] : "/FSR_raw_data"
+[force_generator] --> [motor_controller] : "/motor_command"
+[force_generator] --> [bag_recorder] : "/motor_command"
+[motor_controller] --> [bag_recorder] : "/motor_position"
+[true_force_sensor] --> [bag_recorder] : "/true_force_data"
+[FSR_raw] --> [bag_recorder] : "/FSR_raw_data"
 [FSR_raw] --> [calibration] : "FSR_raw_data"
-[calibration] --> [writing_machine] : "/FSR_calibrated_data"
+[calibration] --> [bag_recorder] : "/FSR_calibrated_data"
 
-note top of trajectory_generator
+note top of force_generator
     Генерирует траекторию движения для поступательного звена; 
     Публикует команды для моторов и машины записи
 end note
@@ -29,7 +29,7 @@ note top of calibration
     Публикует откалиброванные данные для машины записи
 end note    
 
-note bottom of writing_machine
+note bottom of bag_recorder
     Получает команды для моторов, откалиброванные данные с FSR сенсора и истинные данные с FSR сенсора; 
     Собирает экспериментальные данные для анализа
 end note    
