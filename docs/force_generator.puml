@@ -1,0 +1,44 @@
+@startuml
+package domain {
+    class ForceGeneratorConfig <<dataclass>> {
+        contact_force: float
+        load_form: str
+        steps: int
+        t_rise: float
+        cycles: int
+        delay: float
+    }
+    class ForceGenerator {
+        + validate_config(config: ForceGeneratorConfig): bool
+        + generate_force(config: ForceGeneratorConfig): Force
+        + send_force_msg(force: Force)
+    }
+    class Force {
+        value: float
+    }
+    interface ConfigValidation {
+        + validate_config(config: ForceGeneratorConfig): bool
+    }
+    interface ForceMSG {
+        + send_force_msg(force: Force)
+    }
+    interface ForceFromConfig {
+        + generate_force(config: ForceGeneratorConfig): Force
+    }
+}
+package ros {
+    class ForceGeneratorNode {
+        force_generator: ForceGenerator
+        config: ForceGeneratorConfig
+    }
+}
+ForceGeneratorConfig <.. ForceGenerator
+ForceGenerator <.. Force
+ForceMSG <-- Force
+ForceGenerator ..|> ConfigValidation
+ForceGenerator ..|> ForceFromConfig
+ForceGenerator ..|> ForceMSG
+
+
+
+@enduml
